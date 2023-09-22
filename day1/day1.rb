@@ -1,4 +1,4 @@
-def calculate_max_calories(filename, number_eleves = 1)
+def calculate_max_calories(filename, number_elves = 1)
   filename = File.dirname(__FILE__) + '/' + filename
   
   totals = []
@@ -13,11 +13,10 @@ def calculate_max_calories(filename, number_eleves = 1)
     elsif line == File.readlines(filename).last
       totals << sum 
     end
-
   end
 
   totals.sort!.reverse!
-  totals.first(number_eleves).sum
+  totals.first(number_elves).sum
 end
 
 def test(calculation, expected)
@@ -33,4 +32,3 @@ test(calculate_max_calories('calories_test.txt', 3), 45000)
 
 # Results
 puts calculate_max_calories('calories.txt', 3) 
-
