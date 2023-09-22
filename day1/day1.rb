@@ -29,8 +29,10 @@ end
 
 # Tests
 test(calculate_max_calories('calories_test.txt'), 24000)
+test(calculate_max_calories('calories_test2.txt'), 24000)
 test(calculate_max_calories('calories.txt'), 71502)
 test(calculate_max_calories('calories_test.txt', 3), 45000)
+test(calculate_max_calories('calories_test2.txt', 3), 45000)
 
 # Results
 puts calculate_max_calories('calories.txt', 3) 
