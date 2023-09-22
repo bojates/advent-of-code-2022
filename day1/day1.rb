@@ -1,16 +1,18 @@
 def calculate_max_calories(filename, number_elves = 1)
   filename = File.dirname(__FILE__) + '/' + filename
+  # create an iterator to avoid loading the whole file into memory
+  # but also so we can check for the end of the file as we loop
+  lines = File.foreach(filename) 
   
   totals = []
   sum = 0
   
-  File.foreach(filename) do |line| 
+  lines.each_with_index do |line, idx| 
     sum += line.to_i
-
     if line =~ /^([^0-9]*)$/
       totals << sum
       sum = 0
-    elsif line == File.readlines(filename).last
+    elsif idx == lines.count - 1
       totals << sum 
     end
   end
