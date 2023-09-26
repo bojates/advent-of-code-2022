@@ -113,11 +113,11 @@ class RPS
   end
 
   private 
-  
+
   def self.my_play(their_play, desired_result)
-    return 'rock' if single_play(their_play, 'rock') == desired_result
-    return 'paper' if single_play(their_play, 'paper') == desired_result
-    return 'scissors' if single_play(their_play, 'scissors') == desired_result
+    ['rock', 'paper', 'scissors'].each do |play|
+      return play if single_play(their_play, play) == desired_result
+    end
   end
 
   def self.decode_line(line)
