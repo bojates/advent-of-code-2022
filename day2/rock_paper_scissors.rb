@@ -91,42 +91,48 @@ round_result(their play, my_play)
 
 =end
 
-CODE_TO_WORD = { 'A' => 'rock', 'B' => 'paper', 'C' => 'scissors', 
-                 'X' => 'rock', 'Y' => 'paper', 'Z' => 'scissors', }
-PLAY_SCORE = { 'rock' => 1, 'paper' => 2, 'scissors' => 3 }
-RESULT_SCORE = { 'win' => 6, 'lose' => 0, 'draw' => 3 }
+class RPS
+  CODE_TO_WORD = { 'A' => 'rock', 'B' => 'paper', 'C' => 'scissors', 
+                  'X' => 'rock', 'Y' => 'paper', 'Z' => 'scissors', }
+  PLAY_SCORE = { 'rock' => 1, 'paper' => 2, 'scissors' => 3 }
+  RESULT_SCORE = { 'win' => 6, 'lose' => 0, 'draw' => 3 }
 
-def rps(filename)
-  filename = File.dirname(__FILE__) + '/' + filename
-  lines = File.foreach(filename)
-  total_score = 0
+  def self.play_series(filename)
+    filename = File.dirname(__FILE__) + '/' + filename
+    lines = File.foreach(filename)
+    total_score = 0
+    
+    lines.each do |line| 
+      them, me = get_plays(line)
+      total_score += PLAY_SCORE.fetch(me)
+      total_score += RESULT_SCORE.fetch(round_result(them, me))
+    end
 
-  lines.each do |line| 
-    _, them, me = *line.match(/([ABC])\s([XYZ])/)
-    them = CODE_TO_WORD.fetch(them)
-    me = CODE_TO_WORD[me]
-    total_score += PLAY_SCORE.fetch(me)
-    total_score += RESULT_SCORE.fetch(round_result(them, me))
+    total_score
   end
-  
-  total_score
-end
 
-def round_result(their_play, my_play)
-  case their_play
-  when 'rock'
-    return 'draw' if my_play == 'rock'
-    return 'win' if my_play == 'paper'
-    return 'lose' if my_play == 'scissors'
-  when 'paper'
-    return 'lose' if my_play == 'rock'
-    return 'draw' if my_play == 'paper'
-    return 'win' if my_play == 'scissors'
-  when 'scissors'
-    return 'win' if my_play == 'rock'
-    return 'lose' if my_play == 'paper'
-    return 'draw' if my_play == 'scissors'
+  def self.get_plays(line)
+    _, player_1, player_2 = *line.match(/([ABC])\s([XYZ])/)
+    [CODE_TO_WORD.fetch(player_1), CODE_TO_WORD.fetch(player_2)]
   end
+
+  def self.round_result(their_play, my_play)
+    case their_play
+    when 'rock'
+      return 'draw' if my_play == 'rock'
+      return 'win' if my_play == 'paper'
+      return 'lose' if my_play == 'scissors'
+    when 'paper'
+      return 'lose' if my_play == 'rock'
+      return 'draw' if my_play == 'paper'
+      return 'win' if my_play == 'scissors'
+    when 'scissors'
+      return 'win' if my_play == 'rock'
+      return 'lose' if my_play == 'paper'
+      return 'draw' if my_play == 'scissors'
+    end
+  end
+
 end
 
 
@@ -136,10 +142,7 @@ def run_test(test_result, expected)
   puts 
 end
 
-# run_test(round_result('rock', 'rock'), 'draw')
-# run_test(round_result('rock', 'paper'), 'win')
-# run_test(round_result('rock', 'scissors'), 'lose')
-# run_test(round_result('scissors', 'rock'), 'win')
+# puts RPS.play_series('strategy_guide_test.txt')
 
-run_test(rps('strategy_guide_test.txt'), 15)
-run_test(rps('strategy_guide.txt'), 0)
+run_test(RPS.play_series('strategy_guide_test.txt'), 15)
+run_test(RPS.play_series('strategy_guide.txt'), 0)
