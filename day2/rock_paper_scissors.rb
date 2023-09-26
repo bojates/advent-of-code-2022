@@ -92,10 +92,10 @@ round_result(their play, my_play)
 =end
 
 class RPS
-  CODE_TO_WORD = { 'A' => 'rock', 'B' => 'paper', 'C' => 'scissors', 
-                  'X' => 'rock', 'Y' => 'paper', 'Z' => 'scissors', }
+  CODE_TO_WORD = { 'A' => 'rock', 'B' => 'paper', 'C' => 'scissors' }
+  CODE_TO_RESULT = { 'X' => 'lose', 'Y' => 'draw', 'Z' => 'win' }
   PLAY_SCORE = { 'rock' => 1, 'paper' => 2, 'scissors' => 3 }
-  RESULT_SCORE = { 'win' => 6, 'lose' => 0, 'draw' => 3 }
+  RESULT_SCORE = { 'lose' => 0, 'draw' => 3, 'win' => 6 }
 
   def self.play_series(filename)
     filename = File.dirname(__FILE__) + '/' + filename
@@ -103,17 +103,26 @@ class RPS
     total_score = 0
     
     lines.each do |line| 
-      them, me = get_plays(line)
-      total_score += PLAY_SCORE.fetch(me)
-      total_score += RESULT_SCORE.fetch(single_play(them, me))
+      their_play, desired_result = decode_line(line)
+      total_score += RESULT_SCORE.fetch(desired_result)
+      total_score += PLAY_SCORE.fetch(my_play(their_play, desired_result))
+      # total_score += PLAY_SCORE.fetch(me)
     end
 
     total_score
   end
 
-  def self.get_plays(line)
-    _, player_1, player_2 = *line.match(/([ABC])\s([XYZ])/)
-    [CODE_TO_WORD.fetch(player_1), CODE_TO_WORD.fetch(player_2)]
+  private 
+  
+  def self.my_play(their_play, desired_result)
+    return 'rock' if single_play(their_play, 'rock') == desired_result
+    return 'paper' if single_play(their_play, 'paper') == desired_result
+    return 'scissors' if single_play(their_play, 'scissors') == desired_result
+  end
+
+  def self.decode_line(line)
+    _, player_1, result = *line.match(/([ABC])\s([XYZ])/)
+    [CODE_TO_WORD.fetch(player_1), CODE_TO_RESULT.fetch(result)]
   end
 
   def self.single_play(their_play, my_play)
@@ -144,5 +153,5 @@ end
 
 # puts RPS.play_series('strategy_guide_test.txt')
 
-run_test(RPS.play_series('strategy_guide_test.txt'), 15)
+run_test(RPS.play_series('strategy_guide_test.txt'), 12)
 run_test(RPS.play_series('strategy_guide.txt'), 0)
