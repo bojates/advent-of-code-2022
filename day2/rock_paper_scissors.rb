@@ -105,7 +105,7 @@ class RPS
     lines.each do |line| 
       them, me = get_plays(line)
       total_score += PLAY_SCORE.fetch(me)
-      total_score += RESULT_SCORE.fetch(round_result(them, me))
+      total_score += RESULT_SCORE.fetch(single_play(them, me))
     end
 
     total_score
@@ -116,7 +116,7 @@ class RPS
     [CODE_TO_WORD.fetch(player_1), CODE_TO_WORD.fetch(player_2)]
   end
 
-  def self.round_result(their_play, my_play)
+  def self.single_play(their_play, my_play)
     case their_play
     when 'rock'
       return 'draw' if my_play == 'rock'
