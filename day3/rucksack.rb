@@ -17,10 +17,69 @@ def test(input, expected)
   puts "got: #{input}"
 end
 
+def find_badge(filename)
+  filename = File.dirname(__FILE__) + '/' + filename
+  lines = File.readlines(filename, chomp: true)
+  letters = ('a'..'z').to_a + ('A'..'Z').to_a
+  sum = 0
+  
+  lines.each_slice(3) do |elf_1, elf_2, elf_3|
+      badge = elf_1.split('').intersection(elf_2.split(''), elf_3.split('')).first
+      sum += letters.index(badge) + 1
+  end
+
+  sum
+end
+
 test(item_priorities('rucksack_data_test.txt'), 157)
 test(item_priorities('rucksack_data.txt'), 7701)
+test(find_badge('rucksack_data_test.txt'), 70)
+test(find_badge('rucksack_data.txt'), 2644)
 
+=begin
+# Problem version 2
+Groups of three. Each elf carries the item. 
+The three don't also all carry any other item. e.g. A could be in 1, and 2, but not in 3. But badge a would be in 1, 2, 3. 
 
+Find the item that appears in each of the three rucksacks. 
+Elves are in groups of three. As shown in the data. 
+
+Find the priorities of the badges. 
+Sum them. 
+
+# Example
+vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw
+
+Lines 1, 2, 3. 
+Find the item that is in all three. 
+r
+Look up priority. 18. 
+
+Lines 4, 5, 6
+Find the item that is in all three. 
+
+# Algo
+Read the file. 
+sum
+create the letters
+Into an array. 
+lines = File.readlines("my_file.txt")
+  Take three lines at a time each_slice(3)
+    split each line into array
+    elf_1, elf2_, elf_3 = grouping
+    find intersection
+    badge = elf_1.split('').intersection(elf_2.split(''), elf_3.split(''))
+    find priority
+    sum += letters.index(badge)
+
+returm sum
+
+=end
 =begin
 # Problem
 Each rucksack: two large compartments
