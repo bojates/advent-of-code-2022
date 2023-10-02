@@ -1,17 +1,14 @@
 def item_priorities(filename)
   filename = File.dirname(__FILE__) + '/' + filename
-  lines = File.open(filename)
-  sum = 0
+  lines = File.foreach(filename)
   letters = ('a'..'z').to_a + ('A'..'Z').to_a
 
-  lines.each do |line|
+  lines.map do |line|
     half = line.length / 2
-    first, second = line[0, half].split(''), line[half, half].split('')
-    intersection = first.intersection(second).first
-    sum += letters.index(intersection) + 1 if letters.index(intersection)
-  end
-
-  sum
+    comp_1, comp_2 = line[0, half].split(''), line[half, half].split('')
+    intersection = comp_1.intersection(comp_2).first
+    letters.index(intersection) + 1 if letters.index(intersection)
+  end.sum
 end
 
 def test(input, expected)
@@ -21,7 +18,7 @@ def test(input, expected)
 end
 
 test(item_priorities('rucksack_data_test.txt'), 157)
-test(item_priorities('rucksack_data.txt'), 157)
+test(item_priorities('rucksack_data.txt'), 7701)
 
 
 =begin
