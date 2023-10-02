@@ -1,34 +1,42 @@
 def item_priorities(filename)
   filename = File.dirname(__FILE__) + '/' + filename
-  lines = File.foreach(filename)
-  letters = ('a'..'z').to_a + ('A'..'Z').to_a
+  lines = File.readlines(filename, chomp: true)
 
-  lines.map do |line|
-    half = line.length / 2
-    comp_1, comp_2 = line[0, half].split(''), line[half, half].split('')
-    intersection = comp_1.intersection(comp_2).first
-    letters.index(intersection) + 1 if letters.index(intersection)
+  lines.map do |bag|
+    half = bag.length / 2
+    comp_1, comp_2 = bag[0, half].split(''), bag[half, half].split('')
+    both_comps = comp_1.intersection(comp_2).first
+    item_priority(both_comps)
   end.sum
-end
-
-def test(input, expected)
-  puts input == expected ? 'PASS' : '** FAIL **'
-  puts "expected: #{expected}"
-  puts "got: #{input}"
 end
 
 def find_badge(filename)
   filename = File.dirname(__FILE__) + '/' + filename
   lines = File.readlines(filename, chomp: true)
-  letters = ('a'..'z').to_a + ('A'..'Z').to_a
   sum = 0
   
   lines.each_slice(3) do |elf_1, elf_2, elf_3|
-      badge = elf_1.split('').intersection(elf_2.split(''), elf_3.split('')).first
-      sum += letters.index(badge) + 1
+    badge = elf_1.split('').intersection(elf_2.split(''), elf_3.split('')).first
+    sum += item_priority(badge)
   end
-
+  
   sum
+end
+
+def item_priority(item)
+  letters = ('a'..'z').to_a + ('A'..'Z').to_a
+  letters.index(item) + 1 || 0
+end
+
+def test(input, expected)
+  if input == expected 
+    puts "PASS: (#{input})"
+  else
+    puts '** FAIL **'
+    puts "expected: #{expected}"
+    puts "got: #{input}"
+  end
+  puts ""
 end
 
 test(item_priorities('rucksack_data_test.txt'), 157)
