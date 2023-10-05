@@ -54,19 +54,17 @@ def find_overlaps(filename)
   lines = File.readlines(filename, chomp: true)
 
   lines.count do |line|
-    elf1, elf2 = ranges(line)
+    elf1, elf2 = ranges_pair(line)
 
     elf1.intersection(elf2).length == [elf1.length, elf2.length].min
   end
 end
 
-def ranges(line)
-  line.split(",").map { |item| full_range(item) }
-end
-
-def full_range(str_range)
-  first, second = str_range.split("-")
-  (first..second).to_a
+def ranges_pair(line)
+  line.split(",").map do |item|
+    first, second = item.split("-")
+    (first..second).to_a
+  end
 end
 
 test(find_overlaps("data_test.txt"), 2)
