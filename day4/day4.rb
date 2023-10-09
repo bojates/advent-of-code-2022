@@ -49,7 +49,7 @@ def test(result, expected)
   puts ""
 end
 
-def find_overlaps(filename)
+def find_complete_overlaps(filename)
   filename = File.dirname(__FILE__) + "/" + filename
   lines = File.readlines(filename, chomp: true)
 
@@ -60,6 +60,17 @@ def find_overlaps(filename)
   end
 end
 
+def find_any_overlaps(filename)
+  filename = File.dirname(__FILE__) + "/" + filename
+  lines = File.readlines(filename, chomp: true)
+
+  lines.count do |line|
+    elf1, elf2 = ranges_pair(line)
+
+    elf1.intersection(elf2).length.nonzero?
+  end
+end
+
 def ranges_pair(line)
   line.split(",").map do |item|
     first, second = item.split("-")
@@ -67,5 +78,8 @@ def ranges_pair(line)
   end
 end
 
-test(find_overlaps("data_test.txt"), 2)
-test(find_overlaps("data.txt"), 562)
+test(find_complete_overlaps("data_test.txt"), 2)
+test(find_complete_overlaps("data.txt"), 562)
+# Part 2
+test(find_any_overlaps("data_test.txt"), 4)
+test(find_any_overlaps("data.txt"), 924)
